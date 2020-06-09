@@ -1,5 +1,4 @@
--- run against WPECSF
-
+-- run against Workplace
 exec spPTIPurgeTableData 'COMPANY',1,1
 select * from APVendor
 select * from WCTax
