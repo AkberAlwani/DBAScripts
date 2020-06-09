@@ -1,0 +1,33 @@
+
+SELECT 
+		 V.PONUMBER
+		,V.ORD
+		,V.QTYORDER
+		,V.QTYCANCE
+		,V.QTYSHPPD
+		,V.QTYREJ
+		, V.QTYORDER - V.QTYSHPPD + V.QTYREJ - V.QTYCANCE as 'Order-Shipped+Rejected-Canceled'
+		,RTRIM(L.ITEMNMBR) + ' - ' + L.ITEMDESC as 'Item'
+		,ACTNUMST as 'GL Account'
+		,RTRIM(V.VENDORID) + ' - ' + P.VENDNAME as 'Vendor'
+		,CASE 
+			WHEN V.POSTATUS = 1 THEN 'New' 
+			WHEN V.POSTATUS = 2 THEN 'Released' 
+			WHEN V.POSTATUS = 3 THEN 'Change Order' 
+			WHEN V.POSTATUS = 4 THEN 'Received' 
+			WHEN V.POSTATUS = 5 THEN 'Closed' 
+			WHEN V.POSTATUS = 6 THEN 'Canceled'	END
+			,L.ORUNTCST as 'Unit Cost'
+		,P.ORSUBTOT - P.ORTDISAM + P.ORFRTAMT + P.OMISCAMT + P.ORTAXAMT as 'Sub Total-Discount+Freight+Misc+Tax'
+		,P.CURNCYID
+		,D.idfDeptID
+		FROM vwRQPOStatusAll V
+	INNER JOIN dbo.POP10100 P			WITH (NOLOCK) ON V.PONUMBER = P.PONUMBER
+	INNER JOIN dbo.POP10110 L			WITH (NOLOCK) ON V.PONUMBER = L.PONUMBER AND V.ORD = L.ORD
+	LEFT OUTER JOIN dbo.GL00105 G		WITH (NOLOCK) ON V.INVINDX = G.ACTINDX
+	LEFT OUTER JOIN dbo.RQDetail R		WITH (NOLOCK) ON V.PONUMBER = R.edfPONumber AND V.ORD = R.edfPOLine
+	LEFT OUTER JOIN dbo.RQRevDtl RD		WITH (NOLOCK) ON R.idfRQDetailKey = RD.idfRQDetailKey AND R.edfPONumber = RD.edfPONumber AND R.edfPOLine=RD.edfPOLine
+	LEFT OUTER JOIN dbo.RQRevHdr RH		WITH (NOLOCK) ON RD.idfRQRevHdrKey = RH.idfRQRevHdrKey
+	LEFT OUTER JOIN dbo.WCSecurity S	WITH (NOLOCK) ON RH.idfWCSecurityKey = S.idfWCSecurityKey
+	LEFT OUTER JOIN dbo.WCDept D		WITH (NOLOCK) ON D.idfWCDeptKey = R.idfWCDeptKey
+		WHERE  V.QTYORDER - V.QTYSHPPD + V.QTYREJ - V.QTYCANCE > 0 order by PONUMBER

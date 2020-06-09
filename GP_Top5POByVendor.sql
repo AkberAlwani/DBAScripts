@@ -1,0 +1,61 @@
+WITH PurchaseOrders
+	(
+		PONUMBER
+		,DOCDATE
+		,VENDORID
+		,SUBTOTAL
+		,TAXAMNT
+		,POSTATUS
+		,RowNumber
+	)
+AS (
+	SELECT
+		PONUMBER
+		,DOCDATE
+		,VENDORID
+		,SUBTOTAL
+		,TAXAMNT
+		,POSTATUS
+		,ROW_NUMBER() OVER (PARTITION BY VENDORID ORDER BY DOCDATE DESC) AS RowNumber
+	FROM
+		(
+			SELECT
+				PONUMBER
+				,DOCDATE
+				,VENDORID
+				,SUBTOTAL
+				,TAXAMNT
+				,POSTATUS
+			FROM
+				POP10100
+			UNION ALL
+				SELECT
+					PONUMBER
+					,DOCDATE
+					,VENDORID
+					,SUBTOTAL
+					,TAXAMNT
+					,POSTATUS
+				FROM
+					POP30100
+		) AS PurchaseOrders
+)
+SELECT
+	PONUMBER
+	,DOCDATE
+	,VENDORID
+	,SUBTOTAL
+	,TAXAMNT
+	,CASE POSTATUS
+		WHEN 1 THEN 'New'
+		WHEN 2 THEN 'Released'
+		WHEN 3 THEN 'Change Order'
+		WHEN 4 THEN 'Received'
+		WHEN 5 THEN 'Closed'
+		WHEN 6 THEN 'Cancelled'
+	END AS POSTATUS
+FROM
+	PurchaseOrders
+WHERE
+	RowNumber <= 5
+GO

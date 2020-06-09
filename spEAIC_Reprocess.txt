@@ -1,0 +1,14 @@
+INSERT INTO [dbo].[WCEAICQueue]
+           ([idfDescription],[idfLinkTableKey],[idfLinkTableName],[idfParam01],[idfParam02],[idfParam03],[idfParamText01]
+           ,[idfProcessAttempts],[idfProcessedLast],[idfProcessErrorLast],[idfType],[idfDateCreated],[idfDateModified],[idfPriority])
+SELECT
+            idfDescription,idfLinkTableKey,idfLinkTableName,idfParam01,idfParam02,idfParam03,idfParamText01,idfProcessAttempts
+           ,idfProcessedLast,idfProcessErrorLast,idfType,idfDateCreated,idfDateModified,idfPriority
+FROM WCEAICQueueHist
+WHERE idfParam02 ='RCT068244'
+
+UPDATE APVoucher SET idfAppConnWarning=0,idfAppConnError='',idfAppConnCreated=0 WHERE idfDocument01='RCT068244'
+
+/*
+SELECT * FROM APVoucher WHERE idfDocument01='RCT068244'
+*/

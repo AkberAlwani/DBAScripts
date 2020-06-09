@@ -1,0 +1,1 @@
+Exec spPTIFixPrimaryKeySequence @xnRecreateSequenceIfExists=1 

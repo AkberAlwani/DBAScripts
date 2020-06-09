@@ -1,0 +1,29 @@
+Update for Priority Issue in Requisition Entry and UDFT:
+
+1. Replace XXXXX in the statement below with the label that should be used for Priority and Execute against the company databases that use WorkPlace:
+ 
+ 
+DELETE FROM WCLanguageResource WHERE idfResourceID = 'RQPriority'
+INSERT dbo.WCLanguageResource 
+(
+idfWCLanguageResourceKey 
+,idfDescription 
+,idfResourceID 
+,idfSourceType 
+,idfUserModified 
+,idfDateCreated 
+,idfDateModified 
+,idfWCLanguageKey 
+) VALUES (
+0 -- idfWCLanguageResourceKey 
+,'XXXXX' -- idfDescription 
+,'RQPriority' -- idfResourceID 
+,'LITERAL' -- idfSourceType 
+,1 -- idfUserModified 
+,GETDATE() -- idfDateCreated 
+,GETDATE() -- idfDateModified 
+,1 -- idfWCLanguageKey 
+)
+ 
+ 
+2. Reset IIS on the WorkPlace web server - you can just key in iisreset in the Run Command window or you can recycle the Application Pool that WorkPlace uses

@@ -1,0 +1,11 @@
+create table test_exchange (fld1 varchar(100),
+fld2 varchar(100),
+fld3 varchar(100),
+fld4 varchar(100),
+fld5 varchar(100),
+fld6 varchar(100),
+fld7 varchar(100),
+fld8 varchar(100),
+fld9 varchar(100),
+fld10 varchar(100),
+fld11 varchar(100))

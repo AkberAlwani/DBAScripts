@@ -1,0 +1,18 @@
+EXECUTE AS LOGIN = N'AALI';
+GO
+--begin tran
+SELECT SUSER_ID(),SUSER_NAME()
+
+--INSERT INTO DYNAMICS.dbo.MC00100 (EXGTBLID, CURNCYID, EXCHDATE, TIME1, XCHGRATE, EXPNDATE) VALUES ( 'Z-C$-AVG', 'Z-C$', '2019.04.13', '19:09:29', 1.330000, '2019.07.12') ;  SELECT @@IDENTITY ;  
+
+SELECT idfDBName 
+FROM DYNAMICS.dbo.vwWCCompany C WITH (NOLOCK)
+	INNER JOIN master.dbo.sysdatabases d WITH (NOLOCK) ON C.idfDBName = d.name
+	INNER JOIN DYNAMICS.dbo.SY01500 S WITH (NOLOCK) ON C.edfCompanyCode=S.INTERID
+	INNER JOIN DYNAMICS.dbo.SY60100 U WITH (NOLOCK) ON S.CMPANYID = U.CMPANYID 
+WHERE C.idfDBName in  (SELECT Name FROM sys.databases WHERE (has_dbaccess(name) > 0))
+ 
+SELECT Name FROM sys.databases WHERE (has_dbaccess(name) > 0)
+
+
+--rollback tran
